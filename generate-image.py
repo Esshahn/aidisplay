@@ -13,7 +13,7 @@ def load_prompt():
 
 def generate_prediction(prompt):
     prediction_generator = replicate.models.get(
-        "stability-ai/stable-diffusion").predict(prompt=prompt)
+        "stability-ai/stable-diffusion").predict(prompt=prompt, width=1024, height=768)
 
     # iterate over prediction responses
     for index, url in enumerate(prediction_generator):

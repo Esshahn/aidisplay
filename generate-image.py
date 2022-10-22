@@ -1,4 +1,5 @@
 import sys
+import os
 import json
 import requests
 import replicate
@@ -12,6 +13,14 @@ def load_prompt():
 
 
 def generate_prediction(prompt):
+
+    # delete previous images
+    folder_path = sys.path[0] + ("/images")
+    image_dir = os.listdir(folder_path)
+    for images in image_dir:
+        if images.endswith(".png"):
+            os.remove(os.path.join(folder_path, images))
+
     prediction_generator = replicate.models.get(
         "stability-ai/stable-diffusion").predict(prompt=prompt, width=1024, height=768)
 

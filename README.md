@@ -13,6 +13,13 @@
 
 ## Run
 
-- `python3 get-weather.py`
-- `python3 generate-image.py`
-- 
+First you setup a cron job. For this, enter `crontab -e` and add these lines:
+
+```
+*/30 * * * * python3 /home/pi/code/aidisplay/cron.sh
+```
+
+This will execute every 30 minutes and
+
+- get the weather
+- generate an image

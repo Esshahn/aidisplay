@@ -21,17 +21,17 @@ def generate_prediction(prompt):
         # construct filename
         uuid = url.split('/')[-2]
         extension = url.split('.')[-1]  # jpg, png, etc
-        filename = f"images/{uuid}.{extension}"
+        filename = f"/images/{uuid}.{extension}"
 
         # download and save the file
         data = requests.get(url)
-        with open(filename, 'wb') as file:
+        with open(sys.path[0] + filename, 'wb') as file:
             file.write(data.content)
 
     filename_JSON = {
         "filename": filename
     }
-    with open("data/filename.json", 'w') as file_object:
+    with open(sys.path[0] + "/data/filename.json", 'w') as file_object:
         json.dump(filename_JSON, file_object)
 
 

@@ -1,5 +1,6 @@
 import urllib.request
 import json
+import sys
 from datetime import datetime
 
 # https://open-meteo.com/en/docs#latitude=52.173&longitude=7.5474&hourly=temperature_2m,precipitation,rain,snowfall,cloudcover,windspeed_10m&daily=sunrise,sunset&timezone=Europe%2FBerlin
@@ -74,4 +75,4 @@ def save_file(filename, data):
 
 
 weather = get_weather()
-save_file("data/weather.json", weather)
+save_file(sys.path[0] + "/data/weather.json", weather)

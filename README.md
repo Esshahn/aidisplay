@@ -30,3 +30,6 @@ sudo nano /etc/profile
 ./ home/pic/code/aidisplay/display-image.sh
 
 
+
+* 12 * * * REPLICATE_API_TOKEN=3b534893471c8f85e3e8abfff549342db9a99caf /home/pi/code/aidisplay/cron.sh
+*/6 * * * * DISPLAY=:0 /home/pi/code/aidisplay/display-image.sh

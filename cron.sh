@@ -1,4 +1,4 @@
 #!/bin/bash
-/home/pi/code/aidisplay/python3 get-weather.py
+python3 /home/pi/code/aidisplay/get-weather.py
 sleep 10
-/home/pi/code/aidisplay/python3 generate-image.py
+python3 /home/pi/code/aidisplay/generate-image.py

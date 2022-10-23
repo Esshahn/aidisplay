@@ -5,4 +5,4 @@
 
 echo "restarting fbi"
 killall fbi
-fbi -noverbose -a -t /home/pi/code/aidisplay/images/*.png
+fbi -noverbose -a /home/pi/code/aidisplay/images/*.png

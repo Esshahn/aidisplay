@@ -2,7 +2,7 @@
 # slideshow script for raspberry pi
 # this file is for autolaunching your slideshow program fbi at startup
 #
+
+echo "restarting fbi"
 killall fbi
-echo "test"
-INTERVAL=5 #how many seconds for each slide
-fbi -noverbose -a -t $INTERVAL /home/pi/code/aidisplay/images/*.png
+fbi -noverbose -a -t /home/pi/code/aidisplay/images/*.png

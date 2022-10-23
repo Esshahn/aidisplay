@@ -23,3 +23,10 @@ This will execute every 30 minutes and
 
 - get the weather
 - generate an image
+
+chmod +x display-image.sh
+
+sudo nano /etc/profile
+./ home/pic/code/aidisplay/display-image.sh
+
+

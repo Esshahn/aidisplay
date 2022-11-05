@@ -3,5 +3,5 @@
 # this file is for autolaunching your slideshow program fbi at startup
 #
 
-echo "starting fim"
-fim --slideshow 5 -noverbose -a /home/pi/code/aidisplay/images/*.png
+echo "starting feh"
+feh -F -Z -D4 -R2 /home/pi/Pictures/

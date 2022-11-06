@@ -1,5 +1,6 @@
 import sys
 import os
+import glob
 import json
 import requests
 import replicate
@@ -14,12 +15,9 @@ def load_prompt():
 
 def generate_prediction(prompt):
 
-    # delete previous images
-    folder_path = sys.path[0] + ("/images")
-    image_dir = os.listdir(folder_path)
-    for images in image_dir:
-        if images.endswith(".png"):
-            os.remove(os.path.join(folder_path, images))
+    previous_images = []
+    for file in glob.glob("images/*.png"):
+        previous_images.append(file)
 
     prediction_generator = replicate.models.get(
         "stability-ai/stable-diffusion").predict(prompt=prompt, width=1024, height=768)
@@ -37,11 +35,8 @@ def generate_prediction(prompt):
         with open(sys.path[0] + filename, 'wb') as file:
             file.write(data.content)
 
-    filename_JSON = {
-        "filename": filename
-    }
-    with open(sys.path[0] + "/data/filename.json", 'w') as file_object:
-        json.dump(filename_JSON, file_object)
+    for file in previous_images:
+        os.remove(file)
 
 
 prompt = load_prompt()

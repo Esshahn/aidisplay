@@ -16,7 +16,7 @@ def load_prompt():
 def generate_prediction(prompt):
 
     previous_images = []
-    for file in glob.glob("images/*.png"):
+    for file in glob.glob(sys.path[0] + "/images/*.png"):
         previous_images.append(file)
 
     prediction_generator = replicate.models.get(

@@ -16,24 +16,23 @@
 First you setup a cron job. For this, enter `crontab -e` and add these lines:
 
 ```
-*/30 * * * * python3 /home/pi/code/aidisplay/cron.sh
+30 6-22 * * * python3 /home/pi/code/aidisplay/cron.sh
 ```
 
-This will execute every 30 minutes and
+This runs the cron job every 30th minute once per hour between 06:00 and 22:00.
+It does
 
 - get the weather
 - generate an image
 
-chmod +x display-image.sh
-
 sudo nano /etc/profile
 export REPLICATE_API_TOKEN=3b534893471c8f85e3e8abfff549342db9a99caf
-feh -F -Z -D4 -R2 /home/pi/Pictures/
+feh -F -Z -D120 -R120 /home/pi/Pictures/
 
 
 
 * 12 * * * REPLICATE_API_TOKEN=3b534893471c8f85e3e8abfff549342db9a99caf /home/pi/code/aidisplay/cron.sh
-*/6 * * * * DISPLAY=:0 /home/pi/code/aidisplay/display-image.sh
+
 
 ---
 

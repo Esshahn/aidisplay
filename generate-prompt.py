@@ -16,12 +16,48 @@ def save_file(filename, data):
         json.dump(data, file_object)
 
 
-def generate_prompt(weather):
+def generate_prompt(w):
+    weather = []
+    if w["rain"] != 0:
+        weather.append("raining")
 
-    prompt = "Huge thunderstorm at the sea, with big waves, dark clouds and red and yellow sunlight, and a sailing ship, in the style of a baroque oil on canvas"
+    if w["is_sunrise"]:
+        weather.append("at sunrise")
+
+    if w["is_sunset"]:
+        weather.append("at sunset")
+
+    if w["clouds"] <= 20:
+        weather.append("clear sky")
+
+    if w["clouds"] >= 50:
+        weather.append("cloudy sky")
+
+    if w["wind"] <= 5:
+        weather.append("no wind")
+
+    if w["wind"] >= 5:
+        weather.append("wind blowing")
+
+    if w["is_day"]:
+        weather.append("at daylight")
+    else:
+        weather.append("at night")
+
+    description = "A sailing ship at the sea"
+    styles = ["in the stlye of a baroque oil on canvas painting"]
+
+    all_weather = ""
+    for i in weather:
+        all_weather += i + ","
+    all_weather = all_weather[:-1]
+
+    prompt = description + "," + all_weather + "," + styles[0]
+    print(prompt)
+
     return prompt
 
 
 weather = load_json('/data/weather.json')
 prompt = generate_prompt(weather)
-save_file("/data/prompt.json", prompt)
+#save_file("/data/prompt.json", prompt)

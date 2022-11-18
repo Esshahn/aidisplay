@@ -27,7 +27,7 @@ It does
 
 sudo nano /etc/profile
 export REPLICATE_API_TOKEN=3b534893471c8f85e3e8abfff549342db9a99caf
-feh -F -Z -D120 -R120 /home/pi/Pictures/
+feh -F --zoom fill -D120 -R120 /home/pi/Pictures/
 
 
 
@@ -38,6 +38,6 @@ feh -F -Z -D120 -R120 /home/pi/Pictures/
 
 Normale PI Distro MIT Desktop
 FEH installieren (3.6.1 ist okay)
-feh -F -Z -D4 -R2 /home/pi/Pictures/
+feh -F --zoom fill -D4 -R2 /home/pi/Pictures/
 Lädt alle Bilder aus dem Ordner, zeigt jedes 4 Sekunden an und macht alle 2 Sekunden einen Reload des Ordnerinhaltes
 

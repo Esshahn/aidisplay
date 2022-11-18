@@ -55,7 +55,7 @@ def generate_prompt(w):
     prompt = description + "," + all_weather + "," + styles[0]
     print(prompt)
 
-    return prompt
+    return {"prompt": prompt}
 
 
 weather = load_json('/data/weather.json')

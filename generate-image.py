@@ -20,7 +20,7 @@ def generate_prediction(prompt):
         previous_images.append(file)
 
     prediction_generator = replicate.models.get(
-        "stability-ai/stable-diffusion").predict(prompt=prompt, width=1024, height=768)
+        "stability-ai/stable-diffusion").predict(prompt=prompt, width=1920/2, height=1200/2)
 
     # iterate over prediction responses
     for index, url in enumerate(prediction_generator):

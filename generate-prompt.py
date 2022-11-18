@@ -60,4 +60,4 @@ def generate_prompt(w):
 
 weather = load_json('/data/weather.json')
 prompt = generate_prompt(weather)
-#save_file("/data/prompt.json", prompt)
+save_file("/data/prompt.json", prompt)

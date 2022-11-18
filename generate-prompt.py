@@ -45,7 +45,7 @@ def generate_prompt(w):
         weather.append("at night")
 
     description = "A sailing ship at the sea"
-    styles = ["in the stlye of a baroque oil on canvas painting"]
+    styles = ["in the style of a baroque oil on canvas painting"]
 
     all_weather = ""
     for i in weather:

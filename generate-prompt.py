@@ -39,7 +39,7 @@ def generate_prompt(w):
     if w["wind"] >= 5:
         weather.append("wind blowing")
 
-    if w["is_day"]:
+    if w["is_daylight"]:
         weather.append("at daylight")
     else:
         weather.append("at night")

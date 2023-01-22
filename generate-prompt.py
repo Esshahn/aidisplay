@@ -39,10 +39,16 @@ def generate_prompt(w):
     if w["wind"] >= 5:
         weather.append("wind blowing")
 
+    if w["snow"] >= 1:
+        weather.append("snowing")
+
     if w["is_daylight"]:
         weather.append("at daylight")
     else:
         weather.append("at night")
+
+    if not w["is_daylight"] and w["clouds"] <= 20:
+        weather.append("bright stars shining")
 
     description = "A sailing ship at the sea"
     styles = ["in the style of a baroque oil on canvas painting"]

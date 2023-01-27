@@ -1,6 +1,7 @@
 
 import json
 import sys
+import random
 
 
 def load_json(filename):
@@ -14,6 +15,20 @@ def save_file(filename, data):
     """Save data to a file"""
     with open(sys.path[0] + filename, 'w') as file_object:
         json.dump(data, file_object)
+
+
+def random_string():
+    string_array = [
+        "the ship is burning in flames",
+        "a huge comet is glowing in the sky",
+        "a giant sea monster is attacking the ship",
+        "a lighthouse can be seen in the distance",
+        "another ship is attacking"
+    ]
+    if random.randint(1, 10) == 1:
+        return ","+random.choice(string_array)
+    else:
+        return ""
 
 
 def generate_prompt(w):
@@ -51,6 +66,7 @@ def generate_prompt(w):
         weather.append("bright stars shining")
 
     description = "A sailing ship at the sea"
+    random_event = random_string()
     styles = ["in the style of a baroque oil on canvas painting"]
 
     all_weather = ""
@@ -58,7 +74,7 @@ def generate_prompt(w):
         all_weather += i + ","
     all_weather = all_weather[:-1]
 
-    prompt = description + "," + all_weather + "," + styles[0]
+    prompt = description + random_event + "," + all_weather + "," + styles[0]
     print(prompt)
 
     return {"prompt": prompt}

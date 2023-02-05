@@ -23,13 +23,30 @@ def random_string():
         "a huge comet is glowing in the sky",
         "a giant sea monster is attacking the ship",
         "a lighthouse can be seen in the distance",
-        "another ship is attacking"
+        "another ship is attacking",
+        "tentacles rise out of the water",
+        "dolphins are jumping out of the water"
     ]
-    if random.randint(1, 10) == 1:
+    if random.randint(1, 8) == 1:
         return ","+random.choice(string_array)
     else:
         return ""
 
+def random_artist():
+    string_array = [
+       "baroque oil on canvas",
+       "Andy Warhol",
+       "Jackson Pollock",
+       "Roy Lichtenstein",
+       "Monet",
+       "Piet Mondrian",
+       "Gustav Klimt",
+       "Leonardo DaVinci"
+    ]
+    if random.randint(1, 5) == 1:
+        return "in the style of a "+random.choice(string_array)+" painting"
+    else:
+        return "in the style of a "+string_array[0]+" painting"
 
 def generate_prompt(w):
     weather = []
@@ -67,14 +84,13 @@ def generate_prompt(w):
 
     description = "A sailing ship at the sea"
     random_event = random_string()
-    styles = ["in the style of a baroque oil on canvas painting"]
 
     all_weather = ""
     for i in weather:
         all_weather += i + ","
     all_weather = all_weather[:-1]
 
-    prompt = description + random_event + "," + all_weather + "," + styles[0]
+    prompt = description + random_event + "," + all_weather + "," + random_artist()
     print(prompt)
 
     return {"prompt": prompt}

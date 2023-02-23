@@ -19,8 +19,17 @@ def generate_prediction(prompt):
     for file in glob.glob(sys.path[0] + "/images/*.png"):
         previous_images.append(file)
 
-    prediction_generator = replicate.models.get(
-        "stability-ai/stable-diffusion").predict(prompt=prompt, width=1024, height=640)
+    inputs = {
+        'prompt': prompt,
+        'width': 1024,
+        'height': 640
+    }
+
+    model = replicate.models.get("stability-ai/stable-diffusion")
+    version = model.versions.get(
+        "f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1")
+
+    prediction_generator = version.predict(**inputs)
 
     # iterate over prediction responses
     for index, url in enumerate(prediction_generator):

@@ -48,7 +48,7 @@ def random_artist():
     else:
         return "in the style of a "+string_array[0]+" painting"
 
-def generate_prompt(w):
+def generate_prompt_weather(w):
     weather = []
     if w["rain"] != 0:
         weather.append("raining")
@@ -90,7 +90,24 @@ def generate_prompt(w):
         all_weather += i + ","
     all_weather = all_weather[:-1]
 
-    prompt = description + random_event + "," + all_weather + "," + random_artist()
+    return description + random_event + "," + all_weather + "," + random_artist()
+
+def generate_prompt_dog():
+    descriptions = [
+        "An old oil on canvas painting of a dog",
+        "A painting of a dog flying on a rocket to the moon",
+        "A painting of a dog dressed as batman, in the style of a baroque oil on canvas painting",
+        "A 16th century painting of a dog doing something really stupid or funny"
+    ]
+    return random.choice(descriptions)
+
+def generate_prompt(w):
+    random = random.randint(1, 10)
+    if random <= 2:
+        prompt = generate_prompt_dog()
+    else:
+        prompt = generate_prompt_weather(w)
+    
     print(prompt)
 
     return {"prompt": prompt}

@@ -103,8 +103,8 @@ def generate_prompt_random():
     return random.choice(descriptions)
 
 def generate_prompt(w):
-    random = random.randint(1, 10)
-    if random <= 2:
+    rand = random.randint(1, 10)
+    if rand <= 2:
         prompt = generate_prompt_random()
     else:
         prompt = generate_prompt_weather(w)

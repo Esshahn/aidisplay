@@ -24,16 +24,20 @@ feh -F --zoom fill -D10 -R10 /home/pi/Code/aidisplay/images/
 
 This instructs feh to fill the whole display with the image, and check every 10 minutes for new images (D) and display them for ten minutes (R).
 
-Setup a cron job. For this, enter `crontab -e` and add these lines:
+Setup a the cron jobs. For this, enter `crontab -e` and add these lines:
 
 ```
-0 7-20/2,8 * * 0,6 /bin/bash /home/pi/Code/aidisplay/cron.sh
-0 21 * * * /sbin/shutdown -h now
+0 7-20/2 * * /home/pi/Code/aidisplay/cron.sh
 ```
 
-- runs every 2 hours
-- first at 7, last at 20
-- saturday & sunday starts at 8
+- runs every 2 hours until 20:00, starting at 7, then 9, 11...
+
+Next, edit the root crontab (for shutdown privileges), enter `sudo crontab -e` and add this line:
+
+```
+00 21 * * * sudo shutdown
+```
+
 - shuts down the system every day at 21  
 
 

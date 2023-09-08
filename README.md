@@ -41,3 +41,9 @@ Next, edit the root crontab (for shutdown privileges), enter `sudo crontab -e` a
 - shuts down the system every day at 21  
 
 
+## RUN
+
+reboot system with `sudo reboot` and you should be done.
+
+
+

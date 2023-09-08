@@ -7,37 +7,33 @@
 
 ## Setup
 
+- use a desktop based normal raspbian distro
+- make sure to have ssh and wifi setup during image creation
+- git is already installed, so `git pull` the repo into `pi/Code/``
+
 - install `replicate` via `pip install replicate`
 - install `feh` image viewer with `sudo apt install feh -y`
-- export your replicate API TOKEN `export REPLICATE_API_TOKEN=<API_TOKEN>`
 
-## Run
-
-First you setup a cron job. For this, enter `crontab -e` and add these lines:
+edit profile with `sudo nano /etc/profile`
+at the end of the file, add
 
 ```
-30 6-22 * * * python3 /home/pi/code/aidisplay/cron.sh
+export REPLICATE_API_TOKEN=<API TOKEN> 
+feh -F --zoom fill -D10 -R10 /home/pi/Code/aidisplay/images/
 ```
 
-This runs the cron job every 30th minute once per hour between 06:00 and 22:00.
-It does
+This instructs feh to fill the whole display with the image, and check every 10 minutes for new images (D) and display them for ten minutes (R).
 
-- get the weather
-- generate an image
+Setup a cron job. For this, enter `crontab -e` and add these lines:
 
-sudo nano /etc/profile
-export REPLICATE_API_TOKEN=3b534893471c8f85e3e8abfff549342db9a99caf
-feh -F --zoom fill -D120 -R120 /home/pi/Pictures/
+```
+0 7-20/2,8 * * 0,6 /bin/bash /home/pi/Code/aidisplay/cron.sh
+0 21 * * * /sbin/shutdown -h now
+```
 
+- runs every 2 hours
+- first at 7, last at 20
+- saturday & sunday starts at 8
+- shuts down the system every day at 21  
 
-
-* 12 * * * REPLICATE_API_TOKEN=3b534893471c8f85e3e8abfff549342db9a99caf /home/pi/code/aidisplay/cron.sh
-
-
----
-
-Normale PI Distro MIT Desktop
-FEH installieren (3.6.1 ist okay)
-feh -F --zoom fill -D4 -R2 /home/pi/Pictures/
-Lädt alle Bilder aus dem Ordner, zeigt jedes 4 Sekunden an und macht alle 2 Sekunden einen Reload des Ordnerinhaltes
 

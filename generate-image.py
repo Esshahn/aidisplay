@@ -30,7 +30,7 @@ def generate_prediction(prompt):
 
     model = replicate.models.get("stability-ai/stable-diffusion")
     version = model.versions.get(
-        versions[1])
+        versions[0])
 
     prediction_generator = version.predict(**inputs)
 

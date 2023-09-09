@@ -25,12 +25,9 @@ def generate_prediction(prompt):
         'height': 640
     }
 
-    versions = ["f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1",
-                "ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4"]
-
     model = replicate.models.get("stability-ai/stable-diffusion")
     version = model.versions.get(
-        versions[1])
+        "f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1")
 
     prediction_generator = version.predict(**inputs)
 

@@ -7,6 +7,7 @@
 
 ## Setup
 - get an API token from replicate.com
+- choose a model from https://replicate.com/stability-ai/stable-diffusion/versions or use the default one in the `generate-image.py`
 
 - use a desktop based normal raspbian distro
 - make sure to have ssh and wifi setup during image creation

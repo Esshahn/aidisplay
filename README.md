@@ -27,10 +27,11 @@ This instructs feh to fill the whole display with the image, and check every 10 
 Setup a the cron jobs. For this, enter `crontab -e` and add these lines:
 
 ```
-0 7-20/2 * * * REPLICATE_API_TOKEN=<API TOKEN> /home/pi/Code/aidisplay/cron.sh
+0 7-20/3 * * * REPLICATE_API_TOKEN=<API TOKEN> /home/pi/Code/aidisplay/cron.sh >> /home/pi/Code/aidisplay/log.txt >2&1
 ```
 
-- runs every 2 hours until 20:00, starting at 7, then 9, 11...
+- runs every 3 hours until 20:00, starting at 7, then 9, 11...
+- saves all text output in a log file
 
 Next, edit the root crontab (for shutdown privileges), enter `sudo crontab -e` and add this line:
 

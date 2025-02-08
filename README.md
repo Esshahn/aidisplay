@@ -44,6 +44,10 @@ Next, edit the root crontab (for shutdown privileges), enter `sudo crontab -e` a
 
 - shuts down the system every day at 21  
 
+### Disable Screen Sleep
+
+As a final step, boot into the Raspbian Desktop (you can connect a mouse and right click to exit the picture viewer mode) and disable the screen saver: `Menu > Preferences > Raspberry Pi Configuaration > Display > Screen Blanking (Off)`
+
 
 ## RUN
 

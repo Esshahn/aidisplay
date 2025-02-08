@@ -1,24 +1,26 @@
-
 import json
 import sys
 import random
+import os
 
 
 def load_json(filename):
-    # load JSON
-    with open(sys.path[0] + filename) as json_file:
-        json_data = json.load(json_file)
-    return json_data
+    """Load JSON data from a file."""
+    filepath = os.path.join(sys.path[0], filename)
+    with open(filepath, 'r') as file:
+        return json.load(file)
 
 
-def save_file(filename, data):
-    """Save data to a file"""
-    with open(sys.path[0] + filename, 'w') as file_object:
-        json.dump(data, file_object)
+def save_json(filename, data):
+    """Save JSON data to a file."""
+    filepath = os.path.join(sys.path[0], filename)
+    with open(filepath, 'w') as file:
+        json.dump(data, file)
 
 
 def random_string():
-    string_array = [
+    """Randomly add a dramatic event to the scene."""
+    events = [
         "the ship is burning in flames",
         "a huge comet is glowing in the sky",
         "a giant sea monster is attacking the ship",
@@ -27,77 +29,61 @@ def random_string():
         "tentacles rise out of the water",
         "dolphins are jumping out of the water"
     ]
-    if random.randint(1, 8) == 1:
-        return ","+random.choice(string_array)
-    else:
-        return ""
+    return f", {random.choice(events)}" if random.randint(1, 8) == 1 else ""
+
 
 def random_artist():
-    string_array = [
-       "baroque oil on canvas",
-       "Andy Warhol",
-       "Jackson Pollock",
-       "Roy Lichtenstein",
-       "Monet",
-       "Piet Mondrian",
-       "Gustav Klimt",
-       "Leonardo DaVinci"
+    """Randomly select an artistic style."""
+    styles = [
+        "baroque oil on canvas",
+        "Andy Warhol",
+        "Jackson Pollock",
+        "Roy Lichtenstein",
+        "Monet",
+        "Piet Mondrian",
+        "Gustav Klimt",
+        "Leonardo DaVinci"
     ]
-    if random.randint(1, 5) == 1:
-        return "in the style of a "+random.choice(string_array)+" painting"
-    else:
-        return "in the style of a "+string_array[0]+" painting"
+    return f"in the style of a {random.choice(styles)} painting" if random.randint(1, 5) == 1 else "in the style of a baroque oil on canvas painting"
+
 
 def generate_prompt_weather(w):
-    weather = []
-    if w["rain"] != 0:
-        weather.append("raining")
+    """Generate a weather-based prompt for an image."""
+    conditions = []
 
+    if w["rain"]:
+        conditions.append("raining")
     if w["is_sunrise"]:
-        weather.append("at sunrise")
-
+        conditions.append("at sunrise")
     if w["is_sunset"]:
-        weather.append("at sunset")
-
+        conditions.append("at sunset")
     if w["clouds"] <= 20:
-        weather.append("clear sky")
-
+        conditions.append("clear sky")
     if w["clouds"] >= 50:
-        weather.append("cloudy sky")
-
+        conditions.append("cloudy sky")
     if w["wind"] <= 5:
-        weather.append("no wind")
-
+        conditions.append("no wind")
     if w["wind"] >= 5:
-        weather.append("wind blowing")
-
+        conditions.append("wind blowing")
     if w["snow"] >= 1:
-        weather.append("snowing")
-
-    if w["is_daylight"]:
-        weather.append("at daylight")
-    else:
-        weather.append("at night")
+        conditions.append("snowing")
+    
+    conditions.append("at daylight" if w["is_daylight"] else "at night")
 
     if not w["is_daylight"] and w["clouds"] <= 20:
-        weather.append("bright stars shining")
+        conditions.append("bright stars shining")
 
-    description = "A sailing ship at the sea"
-    random_event = random_string()
+    return f"A sailing ship at the sea{random_string()}, {', '.join(conditions)}, {random_artist()}"
 
-    all_weather = ""
-    for i in weather:
-        all_weather += i + ","
-    all_weather = all_weather[:-1]
-
-    return description + random_event + "," + all_weather + "," + random_artist()
 
 def generate_prompt(w):
+    """Generate the final prompt dictionary."""
     prompt = generate_prompt_weather(w)
     print(prompt)
     return {"prompt": prompt}
 
 
+# Load weather data and generate a prompt
 weather = load_json('/data/weather.json')
-prompt = generate_prompt(weather)
-save_file("/data/prompt.json", prompt)
+prompt_data = generate_prompt(weather)
+save_json("/data/prompt.json", prompt_data)

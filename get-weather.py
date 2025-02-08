@@ -1,10 +1,8 @@
 import urllib.request
 import json
 import sys
+import os
 from datetime import datetime
-
-# https://open-meteo.com/en/docs#latitude=52.173&longitude=7.5474&hourly=temperature_2m,precipitation,rain,snowfall,cloudcover,windspeed_10m&daily=sunrise,sunset&timezone=Europe%2FBerlin
-# https://replicate.com/pricing
 
 
 def get_weather():
@@ -69,10 +67,19 @@ def get_weather():
 
 
 def save_file(filename, data):
-    """Save data to a file"""
+    """Ensure the folder exists and save data to a file."""
+    folder = os.path.dirname(filename)
+    os.makedirs(folder, exist_ok=True)  # Create the folder if it doesn't exist
+
     with open(filename, 'w') as file_object:
         json.dump(data, file_object)
 
 
+# Get weather data
 weather = get_weather()
-save_file(sys.path[0] + "/data/weather.json", weather)
+
+# Define file path
+data_folder = sys.path[0] + "/data/weather.json"
+
+# Save weather data
+save_file(data_folder, weather)

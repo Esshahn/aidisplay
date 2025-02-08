@@ -4,16 +4,21 @@ import random
 import os
 
 
+def get_script_dir():
+    """Get the directory where the script is located."""
+    return os.path.dirname(os.path.abspath(__file__))
+
+
 def load_json(filename):
-    """Load JSON data from a file."""
-    filepath = os.path.join(sys.path[0], filename)
+    """Load JSON data from a file, ensuring the path is relative to the script's directory."""
+    filepath = os.path.join(get_script_dir(), filename)
     with open(filepath, 'r') as file:
         return json.load(file)
 
 
 def save_json(filename, data):
-    """Save JSON data to a file."""
-    filepath = os.path.join(sys.path[0], filename)
+    """Save JSON data to a file, ensuring the path is relative to the script's directory."""
+    filepath = os.path.join(get_script_dir(), filename)
     with open(filepath, 'w') as file:
         json.dump(data, file)
 
@@ -83,7 +88,12 @@ def generate_prompt(w):
     return {"prompt": prompt}
 
 
+# Ensure the script always finds the correct data folder
+script_dir = get_script_dir()
+data_folder = os.path.join(script_dir, "data")
+os.makedirs(data_folder, exist_ok=True)  # Create 'data' folder if missing
+
 # Load weather data and generate a prompt
-weather = load_json('/data/weather.json')
+weather = load_json("data/weather.json")
 prompt_data = generate_prompt(weather)
-save_json("/data/prompt.json", prompt_data)
+save_json("data/prompt.json", prompt_data)

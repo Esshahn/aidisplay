@@ -2,3 +2,4 @@
 *.png
 ENV
 data/
+images/

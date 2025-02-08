@@ -7,17 +7,21 @@ import replicate
 
 
 def load_prompt():
-    # load JSON
-    with open(sys.path[0] + '/data/prompt.json') as json_file:
-        json_data = json.load(json_file)
-    return json_data["prompt"]
+    """Load the JSON prompt from file."""
+    filepath = os.path.join(sys.path[0], 'data/prompt.json')
+    with open(filepath, 'r') as json_file:
+        return json.load(json_file)["prompt"]
 
 
 def generate_prediction(prompt):
+    """Generate an image prediction and save it to the 'images' folder."""
 
-    previous_images = []
-    for file in glob.glob(sys.path[0] + "/images/*.png"):
-        previous_images.append(file)
+    # Ensure the 'images' folder exists
+    images_folder = os.path.join(sys.path[0], "images")
+    os.makedirs(images_folder, exist_ok=True)
+
+    # Store previous images for cleanup
+    previous_images = glob.glob(os.path.join(images_folder, "*.png"))
 
     inputs = {
         'prompt': prompt,
@@ -25,31 +29,32 @@ def generate_prediction(prompt):
         'height': 640
     }
 
-    versions = ["f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1",
-                "ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4"]
+    versions = [
+        "f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1",
+        "ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4"
+    ]
 
     model = replicate.models.get("stability-ai/stable-diffusion")
-    version = model.versions.get(
-        versions[1])
+    version = model.versions.get(versions[1])
 
     prediction_generator = version.predict(**inputs)
 
-    # iterate over prediction responses
+    # Iterate over prediction responses
     for index, url in enumerate(prediction_generator):
-
-        # construct filename
         uuid = url.split('/')[-2]
-        extension = url.split('.')[-1]  # jpg, png, etc
-        filename = f"/images/{uuid}.{extension}"
+        extension = url.split('.')[-1]  # jpg, png, etc.
+        filename = os.path.join(images_folder, f"{uuid}.{extension}")
 
-        # download and save the file
+        # Download and save the image
         data = requests.get(url)
-        with open(sys.path[0] + filename, 'wb') as file:
+        with open(filename, 'wb') as file:
             file.write(data.content)
 
+    # Remove old images
     for file in previous_images:
         os.remove(file)
 
 
+# Run the script
 prompt = load_prompt()
 generate_prediction(prompt)

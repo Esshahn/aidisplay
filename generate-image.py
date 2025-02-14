@@ -33,14 +33,13 @@ def generate_prediction(prompt):
     
     model = replicate.models.get("stability-ai/stable-diffusion")
     version = model.versions.get(versions[1])
-    prediction_generator = version.predict(**inputs)
+    prediction_result = version.predict(**inputs)
     
-    # Use the first image provided by the generator
-    try:
-        url = next(prediction_generator)
-    except StopIteration:
+    # Since prediction_result is a list, we access the first element.
+    if not prediction_result:
         print("No image URL received.")
         return
+    url = prediction_result[0]
     
     response = requests.get(url)
     if response.status_code != 200:

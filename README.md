@@ -15,13 +15,14 @@
 
 - install `replicate` via `pip install replicate`
 - install `feh` image viewer with `sudo apt install feh -y`
+- change the permissions for `cron.sh` with `chmod 755 cron.sh`
 
 edit profile with `sudo nano /etc/profile`
 at the end of the file, add
 
 ```
 export REPLICATE_API_TOKEN=<API TOKEN> 
-feh -F --zoom fill -D10 -R10 /home/pi/Code/aidisplay/images/
+nohup feh -F --zoom fill -D30 -R30 /home/pi/Code/aidisplay/images/current.png
 ```
 
 This instructs feh to fill the whole display with the image, and check every 10 seconds for new images (R) and display them for ten seconds (D). The API Token is not needed for the script to execute fine, but is convenient when you have to manually execute a script to test if it works.

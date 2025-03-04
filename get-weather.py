@@ -4,18 +4,37 @@ import sys
 import os
 from datetime import datetime
 
+def get_season(month):
+    seasons = {
+        (12, 1, 2): "winter",
+        (3, 4, 5): "spring",
+        (6, 7, 8): "summer",
+        (9, 10, 11): "autumn"
+    }
+    return next(season for months, season in seasons.items() if month in months)
+
+def convert_time_to_minutes(time_str):
+    hour, minute = map(int, time_str.split(":"))
+    return hour * 60 + minute
 
 def get_weather():
-    url_query = f"https://api.open-meteo.com/v1/forecast?latitude=52.173&longitude=7.5474&hourly=temperature_2m,rain,snowfall,cloudcover,windspeed_10m&daily=sunrise,sunset&timezone=Europe%2FBerlin"
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": "52.173",
+        "longitude": "7.5474",
+        "hourly": "temperature_2m,rain,snowfall,cloudcover,windspeed_10m",
+        "daily": "sunrise,sunset",
+        "timezone": "Europe/Berlin"
+    }
+    url_query = f"{url}?{'&'.join(f'{k}={v}' for k, v in params.items())}"
 
-    with urllib.request.urlopen(url_query) as url:
-        data = json.loads(url.read().decode())
+    with urllib.request.urlopen(url_query) as response:
+        data = json.loads(response.read().decode())
 
-    month = datetime.now().month
-    hour = datetime.now().hour
-    minute = datetime.now().minute
-
-    d = {
+    now = datetime.now()
+    hour = now.hour
+    
+    weather_data = {
         "temp": data["hourly"]["temperature_2m"][hour],
         "rain": data["hourly"]["rain"][hour],
         "snow": data["hourly"]["snowfall"][hour],
@@ -24,62 +43,36 @@ def get_weather():
         "sunrise": data["daily"]["sunrise"][0].split("T")[1],
         "sunset": data["daily"]["sunset"][0].split("T")[1],
         "now_hour": hour,
-        "now_minute": minute,
-        "now_as_minutes": hour * 60 + minute,
-        "today": str(datetime.now())
+        "now_minute": now.minute,
+        "today": str(now),
+        "season": get_season(now.month)
     }
 
-    if month in [9, 10, 11]:
-        d["season"] = "autumn"
-    if month in [12, 1, 2]:
-        d["season"] = "winter"
-    if month in [3, 4, 5]:
-        d["season"] = "spring"
-    if month in [6, 7, 8]:
-        d["season"] = "summer"
+    # Convert times to minutes for easier comparison
+    now_minutes = hour * 60 + weather_data["now_minute"]
+    sunrise_minutes = convert_time_to_minutes(weather_data["sunrise"])
+    sunset_minutes = convert_time_to_minutes(weather_data["sunset"])
 
-    d["sunrise_as_minutes"] = int(d["sunrise"].split(":")[0]) * 60 + \
-        int(d["sunrise"].split(":")[1])
-    d["sunset_as_minutes"] = int(d["sunset"].split(":")[0]) * 60 + \
-        int(d["sunset"].split(":")[1])
+    # Add calculated fields
+    weather_data.update({
+        "now_as_minutes": now_minutes,
+        "sunrise_as_minutes": sunrise_minutes,
+        "sunset_as_minutes": sunset_minutes,
+        "is_daylight": sunrise_minutes <= now_minutes <= sunset_minutes,
+        "is_sunrise": abs(sunrise_minutes - now_minutes) < 60,
+        "is_sunset": abs(sunset_minutes - now_minutes) < 60,
+        "is_day": 7 <= hour <= 21
+    })
 
-    if d["now_as_minutes"] >= d["sunrise_as_minutes"] and d["now_as_minutes"] <= d["sunset_as_minutes"]:
-        d["is_daylight"] = True
-    else:
-        d["is_daylight"] = False
+    return weather_data
 
-    if abs(d["sunrise_as_minutes"] - d["now_as_minutes"]) < 60:
-        d["is_sunrise"] = True
-    else:
-        d["is_sunrise"] = False
+def save_weather():
+    weather = get_weather()
+    filepath = os.path.join(sys.path[0], "data", "weather.json")
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    
+    with open(filepath, 'w') as f:
+        json.dump(weather, f)
 
-    if abs(d["sunset_as_minutes"] - d["now_as_minutes"]) < 60:
-        d["is_sunset"] = True
-    else:
-        d["is_sunset"] = False
-
-    if d["now_hour"] >= 7 or d["now_hour"] <= 21:
-        d["is_day"] = True
-    else:
-        d["is_day"] = False
-
-    return d
-
-
-def save_file(filename, data):
-    """Ensure the folder exists and save data to a file."""
-    folder = os.path.dirname(filename)
-    os.makedirs(folder, exist_ok=True)  # Create the folder if it doesn't exist
-
-    with open(filename, 'w') as file_object:
-        json.dump(data, file_object)
-
-
-# Get weather data
-weather = get_weather()
-
-# Define file path
-data_folder = sys.path[0] + "/data/weather.json"
-
-# Save weather data
-save_file(data_folder, weather)
+if __name__ == "__main__":
+    save_weather()

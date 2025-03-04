@@ -1,59 +1,43 @@
-import sys
 import os
 import json
 import requests
 import replicate
 
-def load_prompt():
-    """Load the JSON prompt from file."""
-    filepath = os.path.join(sys.path[0], 'data/prompt.json')
-    with open(filepath, 'r') as json_file:
-        return json.load(json_file)["prompt"]
-
-def generate_prediction(prompt):
-    """
-    Generate an image prediction and save it to the 'images' folder atomically.
-    Instead of deleting old files, we always update the same file (current.png).
-    """
-    images_folder = os.path.join(sys.path[0], "images")
-    os.makedirs(images_folder, exist_ok=True)
+def generate_image():
+    """Generate an AI image from prompt and save it."""
+    # Load prompt
+    script_dir = os.path.dirname(__file__)
+    with open(os.path.join(script_dir, 'data/prompt.json')) as f:
+        prompt = json.load(f)["prompt"]
     
-    # This will be the file that feh displays
-    final_filename = os.path.join(images_folder, "current.png")
+    # Setup paths
+    images_dir = os.path.join(script_dir, "images")
+    os.makedirs(images_dir, exist_ok=True)
+    final_path = os.path.join(images_dir, "current.png")
+    temp_path = os.path.join(images_dir, "current.tmp")
     
-    inputs = {
-        'prompt': prompt,
-        'width': 1024,
-        'height': 640
-    }
-    versions = [
-        "f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1",
-        "ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4"
-    ]
-    
+    # Generate image
     model = replicate.models.get("stability-ai/stable-diffusion")
-    version = model.versions.get(versions[1])
-    prediction_result = version.predict(**inputs)
+    version = model.versions.get("ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4")
     
-    # Since prediction_result is a list, we access the first element.
-    if not prediction_result:
-        print("No image URL received.")
-        return
-    url = prediction_result[0]
+    result = version.predict(
+        prompt=prompt,
+        width=1024,
+        height=640
+    )
     
-    response = requests.get(url)
+    # Download and save image
+    if not result:
+        return print("No image URL received.")
+        
+    response = requests.get(result[0])
     if response.status_code != 200:
-        print("Failed to download image.")
-        return
+        return print("Failed to download image.")
     
-    # Write to a temporary file first
-    tmp_filename = os.path.join(images_folder, "current.tmp")
-    with open(tmp_filename, 'wb') as file:
-        file.write(response.content)
-    
-    # Atomically replace the old image with the new one
-    os.replace(tmp_filename, final_filename)
+    # Save atomically
+    with open(temp_path, 'wb') as f:
+        f.write(response.content)
+    os.replace(temp_path, final_path)
 
-# Run the script
-prompt = load_prompt()
-generate_prediction(prompt)
+if __name__ == "__main__":
+    generate_image()
